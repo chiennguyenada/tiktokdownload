@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.env
+
+# Node/Frontend
+node_modules/
+dist/
+
+# Logs
+*.log
+backend.log
+frontend.log
+
+# Media
+*.mp4
+temp/
+
+# OS
+.DS_Store
