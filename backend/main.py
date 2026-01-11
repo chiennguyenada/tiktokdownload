@@ -1,11 +1,12 @@
 from fastapi import FastAPI, HTTPException, Header, Body
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.concurrency import run_in_threadpool
 from pydantic import BaseModel
 import os
 import shutil
 from dotenv import load_dotenv
-from services.downloader import download_video
-from services.gemini_analyzer import analyze_video
+from services import downloader
+from services import gemini_analyzer
 
 load_dotenv()
 
@@ -20,34 +21,34 @@ app.add_middleware(
 )
 
 class AnalysisRequest(BaseModel):
-    url: str
-
-DEFAULT_API_KEY = os.getenv("GEMINI_API_KEY")
+    video_url: str
 
 @app.post("/analyze")
-async def analyze_claim(
-    request: AnalysisRequest,
-    x_gemini_api_key: str | None = Header(default=None)
-):
-    api_key = x_gemini_api_key or DEFAULT_API_KEY
+async def analyze_video_endpoint(request: AnalysisRequest, x_gemini_api_key: str = Header(None)):
+    api_key = x_gemini_api_key
     if not api_key:
-        raise HTTPException(status_code=400, detail="API Key not provided and no default server key found.")
+        api_key = os.getenv("GEMINI_API_KEY")
+        
+    if not api_key:
+        raise HTTPException(status_code=400, detail="Gemini API Key is required (either in header or .env)")
 
     try:
         # 1. Download Video
-        print(f"Downloading video from: {request.url}")
-        video_path = download_video(request.url)
+        print(f"Downloading video from: {request.video_url}")
+        # Run blocking download in thread pool
+        video_path = await run_in_threadpool(downloader.download_video, request.video_url, "temp")
         print(f"Video downloaded to: {video_path}")
-
+        
         # 2. Analyze with Gemini
         print("Starting analysis...")
-        analysis_result = analyze_video(video_path, api_key)
+        # Run blocking analysis in thread pool
+        analysis_result = await run_in_threadpool(gemini_analyzer.analyze_video, video_path, api_key)
         
         # 3. Cleanup
         if os.path.exists(video_path):
             os.remove(video_path)
             print("Temporary video file removed.")
-
+        
         return analysis_result
 
     except Exception as e:

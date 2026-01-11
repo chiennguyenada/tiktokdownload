@@ -10,17 +10,13 @@ echo "Starting Backend on port 8000..."
 cd backend
 
 # Check if uvicorn is installed
-if ! python3 -c "import uvicorn" &> /dev/null; then
-    echo "Uvicorn not found. Installing dependencies..."
-    
-    # Check if running in a virtual environment
-    if [[ -n "$VIRTUAL_ENV" ]]; then
-        echo "Virtual environment detected. Installing via standard pip..."
-        pip install -r requirements.txt
-    else
-        echo "No virtual environment detected. Attempting user install..."
-        pip install --user --break-system-packages -r requirements.txt
-    fi
+# Check if running in a virtual environment
+if [[ -n "$VIRTUAL_ENV" ]]; then
+    echo "Virtual environment detected. Installing/Updating dependencies..."
+    pip install -U -r requirements.txt
+else
+    echo "No virtual environment detected. Installing/Updating user packages..."
+    pip install --user --break-system-packages -U -r requirements.txt
 fi
 
 python3 -m uvicorn main:app --port 8000 --reload &

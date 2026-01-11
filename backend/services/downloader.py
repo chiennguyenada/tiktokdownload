@@ -11,8 +11,9 @@ def download_video(url: str, output_dir: str = "temp") -> str:
         'outtmpl': f'{output_dir}/{unique_filename}.%(ext)s',
         'format': 'best[ext=mp4]/best',
         'noplaylist': True,
-        'socket_timeout': 30,
-        'retries': 3,
+        'socket_timeout': 60,
+        'retries': 10,
+        'fragment_retries': 10,
     }
 
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:

@@ -19,7 +19,7 @@ const Home = ({ apiKey }) => {
                 headers['X-Gemini-API-Key'] = apiKey;
             }
 
-            const response = await axios.post(backendUrl, { url }, { headers });
+            const response = await axios.post(backendUrl, { video_url: url }, { headers });
             setResult(response.data);
         } catch (err) {
             console.error(err);

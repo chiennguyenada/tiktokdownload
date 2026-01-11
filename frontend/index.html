@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -30,45 +31,52 @@
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <!-- Lucide Icons (Development build for global access ideally, but standard script works) -->
     <script src="https://unpkg.com/lucide@latest"></script>
-    
+
     <style>
         body {
-            background-color: #0f172a; /* brand.dark */
+            background-color: #0f172a;
+            /* brand.dark */
             color: white;
             font-family: 'Inter', sans-serif;
         }
+
         /* Custom scrollbar */
         ::-webkit-scrollbar {
             width: 8px;
         }
+
         ::-webkit-scrollbar-track {
-            background: #1e293b; 
+            background: #1e293b;
         }
+
         ::-webkit-scrollbar-thumb {
-            background: #475569; 
+            background: #475569;
             border-radius: 4px;
         }
     </style>
 </head>
+
 <body>
     <div id="root"></div>
 
     <!-- Application Scripts -->
     <!-- Order matters due to global variables if not using modules -->
-    
+
     <!-- Utilities/Icons wrapper -->
     <script type="text/babel" src="js/icons.js"></script>
 
     <!-- Components -->
-    <script type="text/babel" src="js/components/Loader.js"></script>
-    <script type="text/babel" src="js/components/AnalysisResult.js"></script>
-    
+    <script type="text/babel" src="js/components/Loader.js?v=4"></script>
+    <script type="text/babel" src="js/components/CreativeStudio.js?v=4"></script>
+    <script type="text/babel" src="js/components/AnalysisResult.js?v=4"></script>
+
     <!-- Pages -->
-    <script type="text/babel" src="js/pages/Settings.js"></script>
-    <script type="text/babel" src="js/pages/Home.js"></script>
-    
+    <script type="text/babel" src="js/pages/Settings.js?v=4"></script>
+    <script type="text/babel" src="js/pages/Home.js?v=4"></script>
+
     <!-- Main App -->
-    <script type="text/babel" src="js/App.js"></script>
-    <script type="text/babel" src="js/main.js"></script>
+    <script type="text/babel" src="js/App.js?v=4"></script>
+    <script type="text/babel" src="js/main.js?v=4"></script>
 </body>
+
 </html>

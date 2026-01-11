@@ -95,3 +95,5 @@ def analyze_video(video_path: str, api_key: str) -> dict:
             "summary": "Failed to parse JSON response from Gemini.",
             "raw_response": response.text
         }
+
+
