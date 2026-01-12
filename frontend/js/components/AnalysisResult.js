@@ -1,4 +1,25 @@
-const AnalysisResult = ({ data }) => {
+const AnalysisResult = ({ data, onUpdate }) => {
+    const [isCreativeStudioReady, setIsCreativeStudioReady] = React.useState(!!window.CreativeStudio);
+
+    React.useEffect(() => {
+        if (isCreativeStudioReady) return;
+
+        const checkInterval = setInterval(() => {
+            if (window.CreativeStudio) {
+                setIsCreativeStudioReady(true);
+                clearInterval(checkInterval);
+            }
+        }, 100);
+
+        // Timeout after 5 seconds to avoid infinite polling
+        const timeout = setTimeout(() => clearInterval(checkInterval), 5000);
+
+        return () => {
+            clearInterval(checkInterval);
+            clearTimeout(timeout);
+        };
+    }, [isCreativeStudioReady]);
+
     if (!data) return null;
 
     const { verdict, claims, summary } = data;
@@ -48,7 +69,19 @@ const AnalysisResult = ({ data }) => {
 
             {/* Creative Studio */}
             {Array.isArray(data.transcript) && data.transcript.length > 0 && (
-                <window.CreativeStudio originalScript={data.transcript.map(t => t.content || '').join(' ')} />
+                isCreativeStudioReady && window.CreativeStudio ? (
+                    <window.CreativeStudio
+                        originalScript={data.transcript.map(t => t.content || '').join(' ')}
+                        initialRewrittenScript={data.rewritten_script}
+                        initialCustomPrompt={data.custom_prompt}
+                        onUpdate={onUpdate}
+                    />
+                ) : (
+                    <div className="p-4 bg-gray-800/50 rounded-lg text-center border border-gray-700">
+                        <window.Icon name="loader" className="animate-spin inline-block mr-2 text-blue-400" size={16} />
+                        <span className="text-gray-400 text-sm">Loading Creative Studio...</span>
+                    </div>
+                )
             )}
         </div>
     );

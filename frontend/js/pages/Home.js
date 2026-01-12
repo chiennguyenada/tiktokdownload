@@ -1,7 +1,10 @@
-const Home = ({ apiKey }) => {
+const Home = ({ apiKey, result, setResult }) => {
     const [url, setUrl] = React.useState('');
     const [loading, setLoading] = React.useState(false);
-    const [result, setResult] = React.useState(null);
+
+    // Lifted state: result and setResult are now props
+    // const [result, setResult] = React.useState(null);
+
     const [error, setError] = React.useState(null);
 
     const handleAnalyze = async () => {
@@ -62,7 +65,20 @@ const Home = ({ apiKey }) => {
 
             {loading && <window.Loader />}
 
-            {result && <window.AnalysisResult data={result} />}
+            {result && (
+                <window.ErrorBoundary>
+                    {window.AnalysisResult ? (
+                        <window.AnalysisResult
+                            data={result}
+                            onUpdate={(updates) => setResult(prev => ({ ...prev, ...updates }))}
+                        />
+                    ) : (
+                        <div className="text-red-400 p-4 border border-red-500 rounded bg-red-900/10">
+                            Error: AnalysisResult component not loaded. Please refresh the page.
+                        </div>
+                    )}
+                </window.ErrorBoundary>
+            )}
         </div>
     );
 };

@@ -1,6 +1,8 @@
 const App = () => {
     const [page, setPage] = React.useState('home');
     const [apiKey, setApiKey] = React.useState(() => localStorage.getItem('tiktok_fact_checker_key') || '');
+    // Lifted state to persist results across navigation
+    const [analysisResult, setAnalysisResult] = React.useState(null);
 
     React.useEffect(() => {
         if (apiKey) {
@@ -36,7 +38,11 @@ const App = () => {
                 <div className="absolute inset-0 bg-blue-500/5 blur-[100px] -z-10 pointer-events-none rounded-full transform translate-y-20"></div>
 
                 {page === 'home' ? (
-                    <window.Home apiKey={apiKey} />
+                    <window.Home
+                        apiKey={apiKey}
+                        result={analysisResult}
+                        setResult={setAnalysisResult}
+                    />
                 ) : (
                     <window.Settings apiKey={apiKey} setApiKey={setApiKey} />
                 )}
