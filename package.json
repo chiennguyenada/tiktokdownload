@@ -1,0 +1,11 @@
+{
+  "name": "tiktok-factchecker",
+  "version": "1.0.0",
+  "description": "Cross-platform launcher for TikTok Fact-Checker",
+  "main": "index.html",
+  "scripts": {
+    "start": "node -e \"const os = require('os'); const spawn = require('child_process').spawn; const script = os.platform() === 'win32' ? '.\\\\run.ps1' : './run.sh'; const shell = os.platform() === 'win32' ? 'powershell.exe' : '/bin/bash'; const process = spawn(shell, [script], { stdio: 'inherit' }); process.on('exit', (code) => exit(code));\""
+  },
+  "author": "",
+  "license": "ISC"
+}
