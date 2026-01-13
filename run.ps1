@@ -45,9 +45,12 @@ Set-Location -Path ".."
 
 # Start Frontend
 Write-Host "Starting Frontend on port 5173..." -ForegroundColor Green
+$currentDir = Get-Location
 $frontendJob = Start-Job -ScriptBlock {
+    param($dir)
+    Set-Location $dir
     python -m http.server 5173 --directory frontend
-}
+} -ArgumentList $currentDir
 
 Write-Host "`nServices started!" -ForegroundColor Yellow
 Write-Host "Backend: http://localhost:8000" -ForegroundColor Gray
