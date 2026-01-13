@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TikTok Fact-Checker</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            dark: '#0f172a',
+                            primary: '#3b82f6',
+                            accent: '#8b5cf6',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <!-- Babel -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Axios -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <!-- Lucide Icons (Development build for global access ideally, but standard script works) -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        body {
+            background-color: #0f172a;
+            /* brand.dark */
+            color: white;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #1e293b;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+
+    <!-- Application Scripts -->
+    <!-- Order matters due to global variables if not using modules -->
+
+    <!-- Utilities/Icons wrapper -->
+    <script type="text/babel" src="js/icons.js"></script>
+
+    <!-- Components -->
+    <script type="text/babel" src="js/components/ErrorBoundary.js?v=17"></script>
+    <script type="text/babel" src="js/components/Loader.js?v=17"></script>
+    <script type="text/babel" src="js/components/CreativeStudio.js?v=17"></script>
+    <script type="text/babel" src="js/components/AnalysisResult.js?v=17"></script>
+
+    <!-- Pages -->
+    <script type="text/babel" src="js/pages/Settings.js?v=17"></script>
+    <script type="text/babel" src="js/pages/Home.js?v=17"></script>
+
+    <!-- Main App -->
+    <script type="text/babel" src="js/App.js?v=17"></script>
+    <script type="text/babel" src="js/main.js?v=17"></script>
+</body>
+
+</html>
