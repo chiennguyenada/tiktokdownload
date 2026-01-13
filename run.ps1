@@ -2,8 +2,25 @@
 
 Write-Host "Stopping existing services on ports 8000 and 5173..." -ForegroundColor Cyan
 # Try to stop processes using these ports
-Get-Process -Id (Get-NetTCPConnection -LocalPort 8000 -ErrorAction SilentlyContinue).OwningProcess -ErrorAction SilentlyContinue | Stop-Process -Force
-Get-Process -Id (Get-NetTCPConnection -LocalPort 5173 -ErrorAction SilentlyContinue).OwningProcess -ErrorAction SilentlyContinue | Stop-Process -Force
+function Stop-PortProcess ($port) {
+    try {
+        $connection = Get-NetTCPConnection -LocalPort $port -ErrorAction SilentlyContinue
+        if ($connection) {
+            $procId = $connection.OwningProcess
+            # Skip System Idle Process (0) and checking if process typically exists
+            if ($procId -gt 0) {
+                Write-Host "Killing process $procId on port $port" -ForegroundColor DarkGray
+                Stop-Process -Id $procId -Force -ErrorAction SilentlyContinue
+            }
+        }
+    }
+    catch {
+        # Ignore errors if no process found or access denied
+    }
+}
+
+Stop-PortProcess 8000
+Stop-PortProcess 5173
 
 # Check for Python
 if (!(Get-Command python -ErrorAction SilentlyContinue)) {
