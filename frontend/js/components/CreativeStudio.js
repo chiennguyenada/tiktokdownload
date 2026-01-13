@@ -1,6 +1,6 @@
 const CreativeStudio = ({ originalScript, initialRewrittenScript, initialCustomPrompt, onUpdate }) => {
     // State initialization from props (for persistence)
-    const [similarity, setSimilarity] = React.useState(90);
+    const [similarity, setSimilarity] = React.useState(80);
     const [rewrittenScript, setRewrittenScript] = React.useState(initialRewrittenScript || '');
     const [customPrompt, setCustomPrompt] = React.useState(initialCustomPrompt || '');
     const [model, setModel] = React.useState('gemini-2.0-flash-exp'); // Default to "3.0" (newest)
@@ -288,18 +288,38 @@ const CreativeStudio = ({ originalScript, initialRewrittenScript, initialCustomP
                         )}
                     </div>
 
-                    {/* HeyGen Button */}
-                    {rewrittenScript && (
-                        <div className="p-4 border-t border-gray-700/50 bg-gray-900/30">
-                            <button className="w-full flex items-center justify-center gap-2 bg-indigo-600/20 hover:bg-indigo-600/30 border border-indigo-500/30 hover:border-indigo-500/50 text-indigo-300 hover:text-indigo-200 px-4 py-2.5 rounded-lg font-medium transition-all group">
-                                <span className="text-xl filter grayscale group-hover:grayscale-0 transition-all">🎥</span>
-                                <span>Generate Video with HeyGen</span>
-                                <span className="text-xs bg-indigo-500/20 px-1.5 py-0.5 rounded text-indigo-400 border border-indigo-500/20">Coming Soon</span>
-                            </button>
-                        </div>
-                    )}
                 </div>
             </div>
+
+            {/* Video Generation Section */}
+            {rewrittenScript && (
+                <div className="p-8 border-t border-gray-700/50 bg-gray-800/40 animate-fade-in-up">
+                    <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
+                        <div className="flex-1 text-center lg:text-left">
+                            <h4 className="text-lg font-bold text-white mb-2 flex items-center justify-center lg:justify-start gap-3">
+                                <span className="p-2 bg-indigo-500/20 rounded-lg">🎥</span>
+                                Next Step: Video Production
+                            </h4>
+                            <p className="text-sm text-gray-400 max-w-2xl">
+                                Your script is polished and ready for the world. You can now use <span className="text-indigo-400 font-semibold">HeyGen</span> AI to generate a video with a realistic avatar speaking this script.
+                            </p>
+                        </div>
+                        <div className="shrink-0 w-full lg:w-auto">
+                            <button className="w-full lg:w-auto relative group overflow-hidden flex items-center justify-center gap-4 bg-indigo-600 hover:bg-indigo-500 text-white px-10 py-4 rounded-2xl font-bold transition-all shadow-xl shadow-indigo-900/40 active:scale-95 border border-indigo-400/20">
+                                <span className="text-2xl filter grayscale group-hover:grayscale-0 transition-all transform group-hover:scale-110 duration-300">🎥</span>
+                                <div className="flex flex-col items-start px-1 text-left">
+                                    <span className="text-[10px] opacity-80 font-normal uppercase tracking-wider">Generate with</span>
+                                    <span className="text-lg">HeyGen AI Video</span>
+                                </div>
+                                <div className="bg-white/10 px-2 py-1 rounded-md text-[9px] border border-white/20 uppercase tracking-widest h-fit">
+                                    Soon
+                                </div>
+                                <div className="absolute inset-x-0 bottom-0 h-1 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform"></div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* Key Popup Modal */}
             {showKeyPopup && (
