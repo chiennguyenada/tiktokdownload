@@ -37,9 +37,12 @@ Write-Host "Checking dependencies..." -ForegroundColor Gray
 python -m pip install -r requirements.txt
 
 # Start FastAPI in background
+$backendDir = Get-Location
 $backendJob = Start-Job -ScriptBlock {
+    param($dir)
+    Set-Location $dir
     python -m uvicorn main:app --port 8000
-}
+} -ArgumentList $backendDir
 
 Set-Location -Path ".."
 
