@@ -52,6 +52,10 @@ const CreativeStudio = ({ originalScript, initialRewrittenScript, initialCustomP
     const executeRewrite = async (apiKey, promptOverride) => {
         setIsRewriting(true);
         try {
+            // Default styling if user provides none
+            const defaultStyle = "nhân xưng thầy và con, phong cách tử vi, nhiều cảm xúc";
+            const instruction = customPrompt.trim() || defaultStyle;
+
             // Updated Prompt Logic for Content Preservation
             const finalPrompt = `
             You are a professional content editor.Your task is to rewrite the video script below.
@@ -60,7 +64,7 @@ const CreativeStudio = ({ originalScript, initialRewrittenScript, initialCustomP
 "${originalScript}"
 
             USER INSTRUCTIONS(Priority):
-"${customPrompt || 'None'}"
+"${instruction}"
 
             CRITICAL CONSTRAINTS:
 1. ** Content Preservation(MANDATORY) **: You must preserve 100 % of the key ideas and facts.If the original has 5 main points, the rewrite MUST have the same 5 points.Do NOT summarize or cut content.
@@ -209,8 +213,8 @@ const CreativeStudio = ({ originalScript, initialRewrittenScript, initialCustomP
                         type="text"
                         value={customPrompt}
                         onChange={(e) => setCustomPrompt(e.target.value)}
-                        placeholder="Instructions (e.g., 'Make it punchier', 'Use more emojis')..."
-                        className="w-full bg-gray-900/50 border border-gray-700 rounded-lg py-2.5 pl-9 pr-4 text-sm text-gray-200 placeholder-gray-600 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 transition-all"
+                        placeholder="Mặc định: nhân xưng thầy và con, phong cách tử vi..."
+                        className="w-full bg-gray-900/50 border border-gray-700 rounded-lg py-2.5 pl-9 pr-4 text-sm text-gray-200 placeholder-gray-500 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 transition-all"
                     />
                 </div>
             </div>
