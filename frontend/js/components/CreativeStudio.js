@@ -181,7 +181,7 @@ const CreativeStudio = ({ originalScript, initialRewrittenScript, initialCustomP
                             onClick={handleRewrite}
                             disabled={isRewriting}
                             className={`
-                                relative group overflow-hidden px-6 py-2.5 rounded-lg font-semibold text-white shadow-lg transition-all
+                                relative group overflow-hidden px-5 py-2.5 rounded-lg font-semibold text-white shadow-lg transition-all
                                 ${isRewriting ? 'bg-gray-700 cursor-wait' : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 active:scale-95'}
                             `}
                         >
@@ -194,13 +194,22 @@ const CreativeStudio = ({ originalScript, initialRewrittenScript, initialCustomP
                                 ) : (
                                     <>
                                         <window.Icon name="sparkles" size={18} />
-                                        <span>Rewrite Script</span>
+                                        <span>Rewrite</span>
                                     </>
                                 )}
                             </span>
-                            {/* Simple glow effect */}
                             {!isRewriting && <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>}
                         </button>
+
+                        {rewrittenScript && (
+                            <button
+                                onClick={handleCopy}
+                                className="flex items-center gap-2 bg-gray-700 hover:bg-gray-600 text-white px-4 py-2.5 rounded-lg font-semibold transition-all active:scale-95 border border-gray-600"
+                            >
+                                <window.Icon name="copy" size={18} />
+                                <span className="hidden sm:inline">Copy Script</span>
+                            </button>
+                        )}
                     </div>
                 </div>
 
