@@ -1,5 +1,7 @@
 from fastapi import FastAPI, HTTPException, Header, Body, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from fastapi.concurrency import run_in_threadpool
 from pydantic import BaseModel
 import os
@@ -12,6 +14,10 @@ load_dotenv()
 
 app = FastAPI()
 
+# Calculate absolute paths for static files
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+FRONTEND_DIR = os.path.join(BASE_DIR, "frontend")
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -19,6 +25,11 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Serve static files (js, css, etc.)
+# We mount everything except index.html as static
+if os.path.exists(FRONTEND_DIR):
+    app.mount("/js", StaticFiles(directory=os.path.join(FRONTEND_DIR, "js")), name="js")
 
 class AnalysisRequest(BaseModel):
     video_url: str
@@ -104,6 +115,14 @@ async def analyze_upload_endpoint(video: UploadFile = File(...), x_gemini_api_ke
 @app.get("/health")
 def health_check():
     return {"status": "ok"}
+
+# Serve index.html for all other routes (Single Page App style)
+@app.get("/{rest_of_path:path}")
+async def serve_frontend(rest_of_path: str):
+    index_file = os.path.join(FRONTEND_DIR, "index.html")
+    if os.path.exists(index_file):
+        return FileResponse(index_file)
+    return {"error": "Frontend not found"}
 
 if __name__ == "__main__":
     import uvicorn

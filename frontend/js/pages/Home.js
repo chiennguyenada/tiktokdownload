@@ -13,7 +13,7 @@ const Home = ({ apiKey, result, setResult }) => {
         setResult(null);
 
         try {
-            const backendUrl = 'http://localhost:8000/analyze';
+            const backendUrl = '/analyze';
             const headers = { 'Content-Type': 'application/json' };
             if (apiKey) {
                 headers['X-Gemini-API-Key'] = apiKey;
@@ -57,7 +57,7 @@ const Home = ({ apiKey, result, setResult }) => {
         setResult(null);
 
         try {
-            const backendUrl = 'http://localhost:8000/analyze-upload';
+            const backendUrl = '/analyze-upload';
             const formData = new FormData();
             formData.append('video', file);
 
@@ -148,8 +148,8 @@ const Home = ({ apiKey, result, setResult }) => {
                     onDrop={handleDrop}
                     disabled={loading}
                     className={`w-full py-10 border-2 border-dashed rounded-2xl transition-all group flex flex-col items-center gap-3 disabled:opacity-50 ${isDragging
-                            ? 'border-blue-400 bg-blue-500/10 shadow-[0_0_20px_rgba(59,130,246,0.15)] scale-[1.01]'
-                            : 'border-gray-700 hover:border-blue-500/50 bg-gray-800/50 hover:bg-gray-800/80'
+                        ? 'border-blue-400 bg-blue-500/10 shadow-[0_0_20px_rgba(59,130,246,0.15)] scale-[1.01]'
+                        : 'border-gray-700 hover:border-blue-500/50 bg-gray-800/50 hover:bg-gray-800/80'
                         }`}
                 >
                     <div className={`p-4 rounded-full transition-colors ${isDragging ? 'bg-blue-500/30' : 'bg-gray-700/50 group-hover:bg-blue-500/20'

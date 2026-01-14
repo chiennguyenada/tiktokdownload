@@ -1,0 +1,10 @@
+.git
+.github
+backend/venv
+backend/temp
+backend/__pycache__
+frontend/js/node_modules
+*.log
+.env
+Dockerfile
+.dockerignore
