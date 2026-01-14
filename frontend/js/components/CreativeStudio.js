@@ -1,6 +1,6 @@
 const CreativeStudio = ({ originalScript, initialRewrittenScript, initialCustomPrompt, onUpdate }) => {
     // State initialization from props (for persistence)
-    const [similarity, setSimilarity] = React.useState(80);
+    const [similarity, setSimilarity] = React.useState(85);
     const [rewrittenScript, setRewrittenScript] = React.useState(initialRewrittenScript || '');
     const [customPrompt, setCustomPrompt] = React.useState(initialCustomPrompt || '');
     const [model, setModel] = React.useState('gemini-2.0-flash-exp'); // Default to "3.0" (newest)
@@ -53,7 +53,7 @@ const CreativeStudio = ({ originalScript, initialRewrittenScript, initialCustomP
         setIsRewriting(true);
         try {
             // Default styling if user provides none
-            const defaultStyle = "nhân xưng thầy và con, phong cách tử vi, nhiều cảm xúc";
+            const defaultStyle = "hãy viết lại voice script trên với độ khác 15%, giữ lại 85% ý nghĩa của toàn bộ script. nhân xưng là ông nếu có, viết cho người xa lạ nhưng đầy cảm xúc, đúng phong cách và kiến thức tử vi";
             const instruction = customPrompt.trim() || defaultStyle;
 
             // Updated Prompt Logic for Content Preservation
@@ -213,7 +213,7 @@ const CreativeStudio = ({ originalScript, initialRewrittenScript, initialCustomP
                         type="text"
                         value={customPrompt}
                         onChange={(e) => setCustomPrompt(e.target.value)}
-                        placeholder="Mặc định: nhân xưng thầy và con, phong cách tử vi..."
+                        placeholder="Mặc định: hãy viết lại với độ khác 15%, nhân xưng là ông..."
                         className="w-full bg-gray-900/50 border border-gray-700 rounded-lg py-2.5 pl-9 pr-4 text-sm text-gray-200 placeholder-gray-500 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 transition-all"
                     />
                 </div>
