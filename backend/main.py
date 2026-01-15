@@ -36,12 +36,9 @@ class AnalysisRequest(BaseModel):
 
 @app.post("/analyze")
 async def analyze_video_endpoint(request: AnalysisRequest, x_gemini_api_key: str = Header(None)):
-    api_key = x_gemini_api_key
+    api_key = x_gemini_api_key or os.getenv("GEMINI_API_KEY")
     if not api_key:
-        api_key = os.getenv("GEMINI_API_KEY")
-        
-    if not api_key:
-        raise HTTPException(status_code=400, detail="Gemini API Key is required (either in header or .env)")
+        raise HTTPException(status_code=400, detail="Gemini API Key missing. Please set it in Settings.")
 
     try:
         # 1. Download Video
@@ -68,12 +65,9 @@ async def analyze_video_endpoint(request: AnalysisRequest, x_gemini_api_key: str
 
 @app.post("/analyze-upload")
 async def analyze_upload_endpoint(video: UploadFile = File(...), x_gemini_api_key: str = Header(None)):
-    api_key = x_gemini_api_key
+    api_key = x_gemini_api_key or os.getenv("GEMINI_API_KEY")
     if not api_key:
-        api_key = os.getenv("GEMINI_API_KEY")
-        
-    if not api_key:
-        raise HTTPException(status_code=400, detail="Gemini API Key is required")
+        raise HTTPException(status_code=400, detail="Gemini API Key missing. Please set it in Settings.")
 
     temp_dir = "temp"
     if not os.path.exists(temp_dir):

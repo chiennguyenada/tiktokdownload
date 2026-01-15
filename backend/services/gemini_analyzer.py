@@ -31,7 +31,6 @@ def analyze_video(video_path: str, api_key: str) -> dict:
         video_file = genai.get_file(video_file.name)
     
     if video_file.state.name == "FAILED":
-        print(f"\nGemini File Processing Error Details: {video_file}")
         raise ValueError(f"Video processing failed. Gemini state: {video_file.state.name}")
 
     print(f"File state: {video_file.state.name}")

@@ -1,14 +1,14 @@
 const App = () => {
     const [page, setPage] = React.useState('home');
-    const [apiKey, setApiKey] = React.useState(() => localStorage.getItem('tiktok_fact_checker_key') || '');
+    const [apiKey, setApiKey] = React.useState(() => localStorage.getItem('GEMINI_API_KEY') || '');
     // Lifted state to persist results across navigation
     const [analysisResult, setAnalysisResult] = React.useState(null);
 
     React.useEffect(() => {
         if (apiKey) {
-            localStorage.setItem('tiktok_fact_checker_key', apiKey);
+            localStorage.setItem('GEMINI_API_KEY', apiKey);
         } else {
-            localStorage.removeItem('tiktok_fact_checker_key');
+            localStorage.removeItem('GEMINI_API_KEY');
         }
     }, [apiKey]);
 
