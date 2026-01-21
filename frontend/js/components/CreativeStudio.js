@@ -52,26 +52,91 @@ const CreativeStudio = ({ originalScript, initialRewrittenScript, initialCustomP
     const executeRewrite = async (apiKey, promptOverride) => {
         setIsRewriting(true);
         try {
-            // Default styling if user provides none
-            const defaultStyle = "hãy viết lại voice script trên với độ khác 15%, giữ lại 85% ý nghĩa của toàn bộ script. nhân xưng là ông nếu có, viết cho người xa lạ nhưng đầy cảm xúc, đúng phong cách và kiến thức tử vi";
-            const instruction = customPrompt.trim() || defaultStyle;
+            let finalPrompt;
+            const userInstruction = customPrompt.trim();
 
-            // Updated Prompt Logic for Content Preservation
-            const finalPrompt = `
-            You are a professional content editor.Your task is to rewrite the video script below.
+            if (!userInstruction) {
+                // *** EXPERT MODE (Default) ***
+                const EXPERT_PROMPT_TEMPLATE = `# VAI TRÒ:
+Bạn là chuyên gia Biên tập Kịch bản Video Dài về Tử vi, Phong thủy và Chữa lành. Bạn có khả năng giữ chân người xem bằng giọng văn cuốn hút, sâu sắc.
+
+# NHIỆM VỤ:
+Viết lại văn bản đầu vào (INPUT) thành kịch bản lời dẫn (Voice Script) dạng "Talking Head".
+
+# YÊU CẦU VỀ ĐỘ DÀI:
+- Mục tiêu thời lượng: 100 giây đến 150 giây.
+- Độ dài văn bản bắt buộc: Từ 250 đến 350 từ.
+- Nếu Input quá ngắn: Hãy phân tích sâu hơn, thêm các ví dụ minh họa, lời khuyên mở rộng để đạt đủ độ dài yêu cầu.
+- Nếu Input quá dài: Hãy chắt lọc ý chính, loại bỏ chi tiết phụ, giữ lại các ý "đắt" nhất để gói gọn trong giới hạn từ cho phép, tuyệt đối không viết tràn lan.
+
+# CHIẾN LƯỢC CTA (KÊU GỌI HÀNH ĐỘNG):
+Hãy phân tích kỹ nội dung Input để TỰ CHỌN 1 trong 4 chiến lược CTA sau đây cho phù hợp nhất (Ghi rõ chiến lược đã chọn ở đầu output):
+
+1. Kịch bản "KIẾN THỨC/MẸO HAY" (Nếu nội dung là mẹo/kiến thức/cách làm):
+   - [Tương tác sớm]: "Kiến thức này có thể trôi mất, hãy bấm LƯU (Save) video lại ngay để dùng khi cần."
+   - [Kết luận]: "Đừng quên lưu lại và áp dụng nhé."
+
+2. Kịch bản "TÂM LINH/CẦU NGUYỆN" (Nếu nội dung thiên về cảm xúc, chữa lành, cầu an):
+   - [Tương tác sớm]: "Để gieo duyên lành, hãy thả tim và bình luận 'Chữ [TỪ_KHÓA_TÂM_LINH]' để xác nhận năng lượng này."
+   - [Kết luận]: "Một lần chia sẻ là một lần tích phước. Hãy lan tỏa điều này."
+
+3. Kịch bản "CẢNH BÁO/QUAN TRỌNG" (Nếu nội dung về vận hạn, cấm kỵ, cảnh báo):
+   - [Tương tác sớm]: "Đây là thông điệp quan trọng vũ trụ gửi đến bạn, đừng lướt qua."
+   - [Kết luận]: "Hãy chia sẻ video này cho người thân tuổi [X] để họ cùng tránh."
+
+4. Kịch bản "KẾT NỐI/DÀI KỲ" (Nếu nội dung là phần 1 hoặc series nhiều tập):
+   - [Tương tác sớm]: "Hãy xác nhận bạn đang lắng nghe bằng cách gõ 'Có tôi'."
+   - [Kết luận]: "Bấm Follow kênh ngay để không bỏ lỡ phần tiếp theo/những dự báo mới nhất."
+
+# CẤU TRÚC KỊCH BẢN:
+1. [HOOK] (0-10s): Giật gân, đánh vào nỗi đau/tò mò.
+2. [TƯƠNG TÁC SỚM] (10-25s): Áp dụng chiến lược CTA đã chọn/chỉ định ở trên.
+3. [THÂN BÀI]: 
+   - Triển khai chi tiết, sâu sắc.
+   - Ngắt nghỉ bằng dấu chấm, phẩy rõ ràng để AI đọc chậm rãi.
+4. [KẾT LUẬN & CTA CUỐI]: Tổng kết và CTA.
+
+# ĐỊNH DẠNG ĐẦU RA:
+- Chỉ trả về nội dung kịch bản text.
+- Đánh dấu các phần [HOOK], [TƯƠNG TÁC SỚM], [THÂN BÀI], [KẾT].
+
+---------------------
+# INPUT DATA:
+{DÁN_NỘI_DUNG_GỐC_CỦA_BẠN_VÀO_ĐÂY}`;
+
+                // Inject Original Script
+                finalPrompt = EXPERT_PROMPT_TEMPLATE.replace("{DÁN_NỘI_DUNG_GỐC_CỦA_BẠN_VÀO_ĐÂY}", originalScript);
+
+                // *** CRITICAL JSON OVERRIDE ***
+                // We append this technical instruction to force JSON output effectively wrapping the expert output
+                finalPrompt += `
+
+================================================================================
+CRITICAL SYSTEM INSTRUCTION (OVERRIDE):
+Despite the instructions above asking for "text only", you MUST wrap your final response in a valid JSON object for the application to process it.
+Do NOT output markdown. Do NOT output plain text. Output ONLY a raw JSON object with this structure:
+{
+    "rewritten_script": "The entire script text generated based on the instructions above",
+    "changes_made": "Summary of the CTA strategy used and key changes",
+    "similarity_score": ${similarity}
+}
+================================================================================
+`;
+            } else {
+                // *** CUSTOM/LEGACY MODE ***
+                // Fallback to the original logic if user types a custom prompt
+                finalPrompt = `
+            You are a professional content editor. Your task is to rewrite the video script below.
 
             ORIGINAL SCRIPT:
 "${originalScript}"
 
             USER INSTRUCTIONS(Priority):
-"${instruction}"
+"${userInstruction}"
 
             CRITICAL CONSTRAINTS:
-1. ** Content Preservation(MANDATORY) **: You must preserve 100 % of the key ideas and facts.If the original has 5 main points, the rewrite MUST have the same 5 points.Do NOT summarize or cut content.
-            2. ** Similarity Setting(${similarity} %) **: This controls the * style * and * phrasing * deviation, not the content.
-               - 100 %: Identical phrasing.Only fix typos.
-               - 80 %: Slight rephrasing for flow.
-               - 0 %: Completely new vocabulary and sentence structure, but SAME meaning and facts.
+1. ** Content Preservation(MANDATORY) **: You must preserve 100 % of the key ideas and facts.
+            2. ** Similarity Setting(${similarity} %) **: This controls the * style * and * phrasing * deviation.
             3. ** Formatting **: Return raw JSON.
 
             Return JSON structure:
@@ -81,6 +146,7 @@ const CreativeStudio = ({ originalScript, initialRewrittenScript, initialCustomP
             "similarity_score": ${similarity}
 }
 `;
+            }
 
             // Model Selection Logic
             // "Gemini 3.0" -> gemini-2.0-flash-exp (Latest experimental)
